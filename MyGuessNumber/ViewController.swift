@@ -10,17 +10,23 @@ import Cocoa
 
 class ViewController: NSViewController {
     var answer = ""
+    let n = 4;      // 猜幾碼
+    var counter = 0
     @IBOutlet weak var guess: NSTextField!
     @IBOutlet weak var hist: NSTextField!
     
     @IBAction func doGuess(_ sender: Any) {
+        counter += 1
         let gvalue = guess.stringValue
         let result = checkAB(guess: gvalue, answer: answer)
-        hist.stringValue += gvalue + " => " + result + "\n"
+        hist.stringValue += "\(counter). \(gvalue) => \(result)\n"
         
-        if result == "3A0B" {
+        if result == "\(n)A0B" {
             showDilaog(title: "恭喜老爺, 賀喜夫人", mesg: result)
             initGame()
+        }else if counter == 10 {
+            showDilaog(title: "9487", mesg: "答案為:\(answer)")
+            guess.stringValue = ""
         }else {
             showDilaog(title: "結果", mesg: result)
             guess.stringValue = ""
@@ -32,9 +38,10 @@ class ViewController: NSViewController {
     }
     
     func initGame(){
-        answer = createAnswer()
+        answer = createAnswer(number: n)
         guess.stringValue = ""
         hist.stringValue = ""
+        counter = 0
     }
     
     func showDilaog(title: String, mesg: String) {
@@ -50,6 +57,9 @@ class ViewController: NSViewController {
     // 輸入(guess, answer) -> 檢查幾A幾B => "1A2B"
     func checkAB(guess:String, answer:String) -> String {
         let len = guess.characters.count
+        
+        if len != 4 {return "別鬧了"}
+        
         var A = 0, B = 0
         
         for i in 0..<len {
@@ -76,11 +86,11 @@ class ViewController: NSViewController {
     }
     
     // 產生謎底
-    func createAnswer() -> String{
+    func createAnswer(number:Int) -> String{
         var num = Array((0...9))
         num = shullfe(source: Array(num))
         var ret = ""
-        for v in 0..<3 {
+        for v in 0..<number {
             ret += String(num[v])
         }
         return ret
