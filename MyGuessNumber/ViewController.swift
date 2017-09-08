@@ -14,11 +14,38 @@ class ViewController: NSViewController {
     @IBOutlet weak var hist: NSTextField!
     
     @IBAction func doGuess(_ sender: Any) {
+        let result = checkAB(guess: guess.stringValue, answer: answer)
         
     }
     
     @IBAction func doReset(_ sender: Any) {
         
+    }
+    
+    func checkAB(guess:String, answer:String) -> String {
+        let len = guess.characters.count
+        var A = 0, B = 0
+        
+        for i in 0..<len {
+            let gchar = mysubstrv2(source: guess, from: i, to: i+1)
+            let achar = mysubstrv2(source: answer, from: i, to: i+1)
+            if gchar == achar {
+                A += 1
+            }else if answer.contains(gchar) {
+                B += 1
+            }
+        }
+        
+        return "\(A)A\(B)B"
+    }
+    
+    func mysubstrv2(source:String, from:Int, to:Int) -> String {
+        let cs = Array(source.characters);
+        var ret = ""
+        for i in from..<to {
+            ret += String(cs[i])
+        }
+        return ret
     }
     
     func createAnswer() -> String{
