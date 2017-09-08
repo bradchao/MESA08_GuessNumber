@@ -14,14 +14,40 @@ class ViewController: NSViewController {
     @IBOutlet weak var hist: NSTextField!
     
     @IBAction func doGuess(_ sender: Any) {
-        let result = checkAB(guess: guess.stringValue, answer: answer)
+        let gvalue = guess.stringValue
+        let result = checkAB(guess: gvalue, answer: answer)
+        hist.stringValue += gvalue + " => " + result + "\n"
         
+        if result == "3A0B" {
+            showDilaog(title: "恭喜老爺, 賀喜夫人", mesg: result)
+            initGame()
+        }else {
+            showDilaog(title: "結果", mesg: result)
+            guess.stringValue = ""
+        }
     }
     
     @IBAction func doReset(_ sender: Any) {
-        
+        initGame()
     }
     
+    func initGame(){
+        answer = createAnswer()
+        guess.stringValue = ""
+        hist.stringValue = ""
+    }
+    
+    func showDilaog(title: String, mesg: String) {
+        let alert = NSAlert()
+        alert.informativeText = mesg
+        alert.messageText = title
+        alert.alertStyle = NSAlertStyle.informational
+        alert.addButton(withTitle: "知道了")
+        alert.runModal()
+    }
+    
+    
+    // 輸入(guess, answer) -> 檢查幾A幾B => "1A2B"
     func checkAB(guess:String, answer:String) -> String {
         let len = guess.characters.count
         var A = 0, B = 0
@@ -39,6 +65,7 @@ class ViewController: NSViewController {
         return "\(A)A\(B)B"
     }
     
+    // 取出子字串
     func mysubstrv2(source:String, from:Int, to:Int) -> String {
         let cs = Array(source.characters);
         var ret = ""
@@ -48,6 +75,7 @@ class ViewController: NSViewController {
         return ret
     }
     
+    // 產生謎底
     func createAnswer() -> String{
         var num = Array((0...9))
         num = shullfe(source: Array(num))
@@ -58,6 +86,7 @@ class ViewController: NSViewController {
         return ret
     }
     
+    // 洗牌邏輯
     func shullfe(source:Array<Int>) -> Array<Int> {
         var poker = source
         let n = poker.count
@@ -79,9 +108,7 @@ class ViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        answer = createAnswer()
-        print(answer)
-
+        initGame()
     }
     override var representedObject: Any? {
         didSet {
